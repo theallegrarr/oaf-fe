@@ -1,5 +1,8 @@
 import { Route, Switch } from 'react-router-dom';
+
+
 import Login from "./pages/Auth"
+import Summary from './pages/Customers';
 
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,6 +12,7 @@ function App() {
     <div className="App">
       <Switch>
         <Route exact path="/" component={Login} />
+        <Route exact path="/summary" component={Summary} />
       </Switch>
     </div>
   );
