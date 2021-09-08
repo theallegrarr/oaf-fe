@@ -1,5 +1,6 @@
 import React, {useState} from "react"
 import { Button } from "react-bootstrap"
+import { toast, ToastContainer } from "react-toastify"
 
 import RepayUpload from './components/RepayUpload'
 import SummaryTable from "./components/Table"
@@ -13,14 +14,51 @@ export default function Summary(){
 
     const sendPaymentRequest = () => {
         // send api call
-        apiCall("POST","api/customers/pay", seasonAmounts, (res) => {
-            setSummaries(JSON.parse(res).data)
-            setSeasonAmounts([])
-            setCsvArray([])
+        makeToast("loading...", "info")
+        apiCall("POST","api/customers/pay", seasonAmounts, () => {
+            apiCall("GET","api/customers/all", {}, (res) => {
+                setSummaries(JSON.parse(res).data)
+                setSeasonAmounts([])
+                setCsvArray([])
+                makeToast("repayments complete")
+            })
         })
     }
 
+    const makeToast = (message, type) => {
+        type === 'error' ?
+        toast.error(message, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        }) :
+        type === 'info' ?
+            toast.info(message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            }) 
+            : toast.success(message, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            }) 
+    }
+
     return(<>
+        <ToastContainer />
         <div className="head-row">
             <h1>Customers Summary</h1>
             <div className="d-flex flex-row space-between head-buttons">
