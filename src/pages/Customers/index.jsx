@@ -1,12 +1,14 @@
 import React, {useState} from "react"
 import { Button } from "react-bootstrap"
 import { toast, ToastContainer } from "react-toastify"
+import { useHistory } from "react-router"
 
 import RepayUpload from './components/RepayUpload'
 import SummaryTable from "./components/Table"
 import apiCall from "../../api/request";
 
 export default function Summary(){
+    const history = useHistory();
     const [show, setShow] = useState(false);
     const [csvArray, setCsvArray] = useState([]);
     const [seasonAmounts, setSeasonAmounts] = useState([]);
@@ -80,7 +82,13 @@ export default function Summary(){
                         }}
                     > + Confirm Request</Button>
                 }
-                <Button className="mb-2 ml-2 btn-danger">Sign Out</Button>
+                <Button
+                    className="mb-2 ml-2 btn-danger"
+                    onClick={(e) => {
+                        e.preventDefault()
+                        localStorage.clear()
+                        history.push("/")
+                    }}>Sign Out</Button>
             </div>
         </div>
         <SummaryTable 

@@ -83,3 +83,9 @@ tr p {
   border-radius: 5px;
   margin-right: 5px;
 }
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}

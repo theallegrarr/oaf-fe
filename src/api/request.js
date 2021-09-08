@@ -7,7 +7,7 @@ export default function apiCall(method, route, data, cb){
     let token = localStorage.getItem("oaf_token")
     let jsonData = JSON.stringify(data)
     
-    token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNjMxMDM3MzA0LCJleHAiOjE2NjI1OTQ5MDR9.DqZhBz-TG3DL5bARBDt5UkMH1258b_CA6BfRG-qO_mA"
+    //token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNjMxMDM3MzA0LCJleHAiOjE2NjI1OTQ5MDR9.DqZhBz-TG3DL5bARBDt5UkMH1258b_CA6BfRG-qO_mA"
     var xhr = new XMLHttpRequest();
     xhr.withCredentials = true;
 
