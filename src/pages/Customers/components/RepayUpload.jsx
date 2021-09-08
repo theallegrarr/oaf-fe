@@ -40,19 +40,22 @@ export default function Example({ show, setShow, setCsvArray, setSeasonAmounts, 
     const getDebt = (userId) => {
       const debts = []
       let lastSeason = 0
+      //console.log(summaries)
       for(let i=0; i<summaries.length; i++){
         if(summaries[i].CustomerID === Number(userId)){
           if(Number(summaries[i].SeasonID) < lastSeason){
             debts.unshift({ 
               season: summaries[i].SeasonID,
               customer: summaries[i].CustomerID,
-              debt: Number(summaries[i].TotalCredit) - Number(summaries[i].TotalRepaid)
+              debt: Number(summaries[i].TotalCredit) - Number(summaries[i].TotalRepaid),
+              prevRepaid: Number(summaries[i].TotalRepaid)
             })
           } else {
             debts.push({ 
               season: summaries[i].SeasonID,
               customer: summaries[i].CustomerID,
-              debt: Number(summaries[i].TotalCredit) - Number(summaries[i].TotalRepaid)
+              debt: Number(summaries[i].TotalCredit) - Number(summaries[i].TotalRepaid),
+              prevRepaid: Number(summaries[i].TotalRepaid)
             })
           }
           lastSeason=Number(summaries[i].SeasonID)
@@ -70,13 +73,16 @@ export default function Example({ show, setShow, setCsvArray, setSeasonAmounts, 
         let customerDebts = getDebt(arr[i].CustomerID)
         let stillHave = arr[i].Amount
         customerDebts.forEach((item) => {
+          //console.log(item)
           if(stillHave > 0){
             if(Number(item.debt) < Number(stillHave)){
               repayments.push({
                 SeasonID: item.season,
-                Amount: item.debt,
                 CustomerID: item.customer,
-                Owe: 0
+                Amount: item.debt,
+                Owe: 0,
+                Repaid: Number(item.prevRepaid)+Number(item.debt),
+                prevRepaid: item.prevRepaid
               })
               stillHave = Number(stillHave)-Number(item.debt)
             } else {
@@ -84,14 +90,16 @@ export default function Example({ show, setShow, setCsvArray, setSeasonAmounts, 
                 SeasonID: item.season,
                 CustomerID: item.customer,
                 Amount: Number(stillHave),
-                Owe: Number(item.debt)-Number(stillHave)
+                Owe: Number(item.debt)-Number(stillHave),
+                Repaid: Number(item.prevRepaid)+Number(stillHave),
+                prevRepaid: item.prevRepaid
               })
               stillHave=0;
             }
           }
         })
       }
-      console.log(repayments)
+      //console.log(repayments)
       setSeasonAmounts(repayments)
     }
 

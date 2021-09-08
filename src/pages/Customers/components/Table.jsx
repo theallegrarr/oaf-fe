@@ -5,7 +5,7 @@ import apiCall from "../../../api/request";
 
 export default function SummaryTable({ seasonAmounts, summaries, setSummaries }){
     useEffect(() => {
-        apiCall("GET","api/customers/all", (res) => {
+        apiCall("GET","api/customers/all", {}, (res) => {
             setSummaries(JSON.parse(res).data)
         })
     }, [setSummaries])

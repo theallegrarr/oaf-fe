@@ -3,14 +3,21 @@ import { Button } from "react-bootstrap"
 
 import RepayUpload from './components/RepayUpload'
 import SummaryTable from "./components/Table"
+import apiCall from "../../api/request";
 
 export default function Summary(){
     const [show, setShow] = useState(false);
     const [csvArray, setCsvArray] = useState([]);
     const [seasonAmounts, setSeasonAmounts] = useState([]);
     const [summaries, setSummaries] = useState([])
-    const sendRequest = () => {
+
+    const sendPaymentRequest = () => {
         // send api call
+        apiCall("POST","api/customers/pay", seasonAmounts, (res) => {
+            setSummaries(JSON.parse(res).data)
+            setSeasonAmounts([])
+            setCsvArray([])
+        })
     }
 
     return(<>
@@ -31,7 +38,7 @@ export default function Summary(){
                         className="mb-2 btn-success"
                         onClick={(e) => {
                             e.preventDefault()
-                            sendRequest()
+                            sendPaymentRequest()
                         }}
                     > + Confirm Request</Button>
                 }

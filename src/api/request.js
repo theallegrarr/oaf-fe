@@ -3,16 +3,18 @@
 // token from local storage
 // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNjMxMDM3MzA0LCJleHAiOjE2NjI1OTQ5MDR9.DqZhBz-TG3DL5bARBDt5UkMH1258b_CA6BfRG-qO_mA"
 
-export default function apiCall(method, route, cb){
+export default function apiCall(method, route, data, cb){
     let token = localStorage.getItem("oaf_token")
+    let jsonData = JSON.stringify(data)
+    
     token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiaWF0IjoxNjMxMDM3MzA0LCJleHAiOjE2NjI1OTQ5MDR9.DqZhBz-TG3DL5bARBDt5UkMH1258b_CA6BfRG-qO_mA"
     var xhr = new XMLHttpRequest();
     xhr.withCredentials = true;
 
     xhr.addEventListener("readystatechange", function() {
-    if(this.readyState === 4) {
-        cb(this.responseText)
-    }
+        if(this.readyState === 4) {
+            cb(this.responseText)
+        }
     });
 
     xhr.open(method, `http://localhost:6273/${route}`);
@@ -20,5 +22,5 @@ export default function apiCall(method, route, cb){
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.withCredentials = false
 
-    xhr.send();
+    method === "POST" ? xhr.send(jsonData) : xhr.send();
 }
