@@ -35,7 +35,7 @@ export default function SummaryTable({ seasonAmounts, summaries, setSummaries })
         </thead>
         <tbody>
             {
-                summaries.map((item, index) => (
+                summaries && summaries.map((item, index) => (
                     <tr key={index}>
                         <td>{index}</td>
                         <td>{item.CustomerID}</td>
