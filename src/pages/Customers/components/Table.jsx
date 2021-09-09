@@ -36,7 +36,7 @@ export default function SummaryTable({ seasonAmounts, summaries, setSummaries })
         <tbody>
             {
                 summaries && summaries.map((item, index) => (
-                    <tr key={index}>
+                    <tr className={`${Number(item.TotalRepaid) === Number(item.TotalCredit) ? 'green' : ''}`} key={index}>
                         <td>{index}</td>
                         <td>{item.CustomerID}</td>
                         <td>{item.CustomerName}</td>

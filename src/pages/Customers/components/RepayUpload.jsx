@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import { Modal, Button, Badge, Alert } from 'react-bootstrap'
-
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Example({ show, setShow, setCsvArray, setSeasonAmounts, summaries }) {
     const handleClose = () => setShow(false);
@@ -43,22 +43,22 @@ export default function Example({ show, setShow, setCsvArray, setSeasonAmounts, 
       //console.log(summaries)
       for(let i=0; i<summaries.length; i++){
         if(summaries[i].CustomerID === Number(userId)){
-          if(Number(summaries[i].SeasonID) < lastSeason){
-            debts.unshift({ 
-              season: summaries[i].SeasonID,
-              customer: summaries[i].CustomerID,
-              debt: Number(summaries[i].TotalCredit) - Number(summaries[i].TotalRepaid),
-              prevRepaid: Number(summaries[i].TotalRepaid)
-            })
-          } else {
-            debts.push({ 
-              season: summaries[i].SeasonID,
-              customer: summaries[i].CustomerID,
-              debt: Number(summaries[i].TotalCredit) - Number(summaries[i].TotalRepaid),
-              prevRepaid: Number(summaries[i].TotalRepaid)
-            })
-          }
-          lastSeason=Number(summaries[i].SeasonID)
+            if(Number(summaries[i].SeasonID) < lastSeason){
+              debts.unshift({ 
+                season: summaries[i].SeasonID,
+                customer: summaries[i].CustomerID,
+                debt: Number(summaries[i].TotalCredit) - Number(summaries[i].TotalRepaid),
+                prevRepaid: Number(summaries[i].TotalRepaid)
+              })
+            } else {
+              debts.push({ 
+                season: summaries[i].SeasonID,
+                customer: summaries[i].CustomerID,
+                debt: Number(summaries[i].TotalCredit) - Number(summaries[i].TotalRepaid),
+                prevRepaid: Number(summaries[i].TotalRepaid)
+              })
+            }
+            lastSeason=Number(summaries[i].SeasonID)
         }
       }
       return debts
@@ -75,31 +75,48 @@ export default function Example({ show, setShow, setCsvArray, setSeasonAmounts, 
         customerDebts.forEach((item) => {
           //console.log(item)
           if(stillHave > 0){
-            if(Number(item.debt) < Number(stillHave)){
-              repayments.push({
-                SeasonID: item.season,
-                CustomerID: item.customer,
-                Amount: item.debt,
-                Owe: 0,
-                Repaid: Number(item.prevRepaid)+Number(item.debt),
-                prevRepaid: item.prevRepaid
-              })
-              stillHave = Number(stillHave)-Number(item.debt)
+            if(!arr[i].SeasonID){
+              if(Number(item.debt) < Number(stillHave)){
+                repayments.push({
+                  SeasonID: item.season,
+                  CustomerID: item.customer,
+                  Amount: item.debt,
+                  Owe: 0,
+                  Repaid: Number(item.prevRepaid)+Number(item.debt),
+                  prevRepaid: item.prevRepaid,
+                  Date: arr[i].Date,
+                  RepaymentID: uuidv4()
+                })
+                stillHave = Number(stillHave)-Number(item.debt)
+              } else {
+                repayments.push({
+                  SeasonID: item.season,
+                  CustomerID: item.customer,
+                  Amount: Number(stillHave),
+                  Owe: Number(item.debt)-Number(stillHave),
+                  Repaid: Number(item.prevRepaid)+Number(stillHave),
+                  prevRepaid: item.prevRepaid,
+                  Date: arr[i].Date,
+                  RepaymentID: uuidv4()
+                })
+                stillHave=0;
+              }
             } else {
               repayments.push({
-                SeasonID: item.season,
-                CustomerID: item.customer,
-                Amount: Number(stillHave),
-                Owe: Number(item.debt)-Number(stillHave),
-                Repaid: Number(item.prevRepaid)+Number(stillHave),
-                prevRepaid: item.prevRepaid
+                SeasonID: Number(arr[i].SeasonID),
+                CustomerID: arr[i].CustomerID,
+                Amount: Number(arr[i].Amount),
+                Owe: Number(item.debt)-Number(arr[i].Amount),
+                Repaid: Number(item.prevRepaid)+Number(arr[i].Amount),
+                prevRepaid: item.prevRepaid,
+                Date: arr[i].Date,
+                RepaymentID: uuidv4()
               })
-              stillHave=0;
             }
           }
         })
       }
-      //console.log(repayments)
+      console.log(repayments)
       setSeasonAmounts(repayments)
     }
 

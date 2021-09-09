@@ -6,10 +6,12 @@ import { useHistory } from "react-router"
 import RepayUpload from './components/RepayUpload'
 import SummaryTable from "./components/Table"
 import apiCall from "../../api/request";
+import ResultTable from "./components/Results"
 
 export default function Summary(){
     const history = useHistory();
     const [show, setShow] = useState(false);
+    const [showResults, setShowResults] = useState(false);
     const [csvArray, setCsvArray] = useState([]);
     const [seasonAmounts, setSeasonAmounts] = useState([]);
     const [summaries, setSummaries] = useState([])
@@ -20,9 +22,9 @@ export default function Summary(){
         apiCall("POST","api/customers/pay", seasonAmounts, () => {
             apiCall("GET","api/customers/all", {}, (res) => {
                 setSummaries(JSON.parse(res).data)
-                setSeasonAmounts([])
                 setCsvArray([])
                 makeToast("repayments complete")
+                setShowResults(true)
             })
         })
     }
@@ -61,6 +63,12 @@ export default function Summary(){
 
     return(<>
         <ToastContainer />
+        <ResultTable 
+            show={showResults}
+            setShow={setShowResults}
+            repayments={seasonAmounts}
+            reset={setSeasonAmounts}
+        />
         <div className="head-row">
             <h1>Customers Summary</h1>
             <div className="d-flex flex-row space-between head-buttons">
